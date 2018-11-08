@@ -1,0 +1,14 @@
+- job:
+    name: kube-eureka
+    project-type: pipeline
+    sandbox: true
+    pipeline-scm:
+      script-path: Jenkinsfile # path to pipeline script definition, "Jenkinsfile" by default.
+      scm: # normal scm definitions
+        - git:
+            url: https://github.com/amitkshirsagar13/kube-eureka.git
+            branches:
+              - '*/master'
+            basedir: ''
+            skip-tag: true
+            wipe-workspace: true

@@ -1,0 +1,20 @@
+version: '3'
+services:
+  eureka-service:
+    build: ./docker/eureka-service
+    image: amitkshirsagar13/eureka-service:latest
+  course-catagory:
+    build: ./docker/course-catagory
+    image: amitkshirsagar13/course-catagory:latest
+  zuul-service:
+    build: ./docker/zuul-service
+    image: amitkshirsagar13/zuul-service:latest
+  oauth-service:
+    build: ./docker/oauth-service
+    image: amitkshirsagar13/oauth-service:latest
+  hystrix-service:
+    build: ./docker/hystrix-service
+    image: amitkshirsagar13/hystrix-service:latest
+  turbine-service:
+    build: ./docker/turbine-service
+    image: amitkshirsagar13/turbine-service:latest

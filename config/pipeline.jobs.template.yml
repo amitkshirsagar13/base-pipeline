@@ -1,0 +1,222 @@
+- view-template:
+    name: '{name}'
+    description: '{name} job list'
+    view-type: list
+    regex: (^({name}).*).*
+    columns:
+      - status
+      - weather
+      - job
+      - last-success
+      - last-failure
+      - last-duration
+      - build-button
+
+- job-group:
+    name: '{name}-gp'
+    jobs:
+      - '{name}-sonar'
+      - '{name}-build'
+      - '{name}-dockerize'
+      - '{name}-unit'
+      - '{name}-deploy'
+
+- job-template:
+    name: '{name}-sonar'
+    project-type: pipeline
+    sandbox: false
+    pipeline-scm:
+      lightweight-checkout: true
+      script-path: '{jenkins-file}'
+      scm:
+        - git:
+            url: https://github.com/{repository}/{name}.git
+            branches:
+              - '*/{branch}'
+    publishers:
+    - email:
+        recipients: '{mail-to}'
+    properties:
+    - build-discarder:
+        days-to-keep: 3
+        num-to-keep: 5
+        artifact-days-to-keep: 2
+        artifact-num-to-keep: 4
+    parameters:
+    - string:
+        name: flag-feature-sonar-scan
+        default: 'yes'
+        description: "Scan Sonar for analysis"
+
+- job-template:
+    name: '{name}-build'
+    project-type: pipeline
+    sandbox: false
+    pipeline-scm:
+      lightweight-checkout: true
+      script-path: '{jenkins-file}'
+      scm:
+        - git:
+            url: https://github.com/{repository}/{name}.git
+            branches:
+              - '*/{branch}'
+    publishers:
+    - email:
+        recipients: '{mail-to}'
+    properties:
+    - build-discarder:
+        days-to-keep: 3
+        num-to-keep: 5
+        artifact-days-to-keep: 2
+        artifact-num-to-keep: 4
+    parameters:
+    - string:
+        name: flag-feature-gradle-build
+        default: 'yes'
+        description: "Gradle Build"
+    - string:
+        name: flag-feature-maven-build
+        default: 'yes'
+        description: "Maven Build"
+
+- job-template:
+    name: '{name}-dockerize'
+    project-type: pipeline
+    sandbox: false
+    pipeline-scm:
+      lightweight-checkout: true
+      script-path: '{jenkins-file}'
+      scm:
+        - git:
+            url: https://github.com/{repository}/{name}.git
+            branches:
+              - '*/{branch}'
+    publishers:
+    - email:
+        recipients: '{mail-to}'
+    properties:
+    - build-discarder:
+        days-to-keep: 3
+        num-to-keep: 5
+        artifact-days-to-keep: 2
+        artifact-num-to-keep: 4
+    parameters:
+    - string:
+        name: flag-feature-gradle-build
+        default: 'yes'
+        description: "Gradle Build"
+    - string:
+        name: flag-feature-maven-build
+        default: 'yes'
+        description: "Maven Build"
+    - string:
+        name: flag-feature-docker-build
+        default: 'yes'
+        description: "Build Docker"
+    - string:
+        name: flag-feature-docker-compose-build
+        default: 'yes'
+        description: "Build Docker-Compose"
+
+- job-template:
+    name: '{name}-unit'
+    project-type: pipeline
+    sandbox: false
+    pipeline-scm:
+      lightweight-checkout: true
+      script-path: '{jenkins-file}'
+      scm:
+        - git:
+            url: https://github.com/{repository}/{name}.git
+            branches:
+              - '*/{branch}'
+    publishers:
+    - email:
+        recipients: '{mail-to}'
+    properties:
+    - build-discarder:
+        days-to-keep: 3
+        num-to-keep: 5
+        artifact-days-to-keep: 2
+        artifact-num-to-keep: 4
+    parameters:
+    - string:
+        name: FOO-TEST
+        default: bar-test
+        description: "A parameter named FOO, defaults to 'bar'."
+    - string:
+        name: flag-feature-k8s-eval
+        default: 'yes'
+        description: "eval k8s file"
+
+- job-template:
+    name: '{name}-deploy'
+    project-type: pipeline
+    sandbox: false
+    pipeline-scm:
+      lightweight-checkout: true
+      script-path: '{jenkins-file}'
+      scm:
+        - git:
+            url: https://github.com/{repository}/{name}.git
+            branches:
+              - '*/{branch}'
+    publishers:
+    - email:
+        recipients: '{mail-to}'
+    properties:
+    - build-discarder:
+        days-to-keep: 3
+        num-to-keep: 5
+        artifact-days-to-keep: 4
+        artifact-num-to-keep: 6
+    parameters:
+    - string:
+        name: flag-feature-gradle-build
+        default: 'yes'
+        description: "Gradle Build"
+    - string:
+        name: flag-feature-maven-build
+        default: 'yes'
+        description: "Build Maven Package."
+    - string:
+        name: flag-feature-docker-build
+        default: 'yes'
+        description: "Build Docker Image."
+    - string:
+        name: flag-feature-docker-compose-build
+        default: 'yes'
+        description: "Build Docker-Compose"
+    - string:
+        name: flag-feature-helm-deploy
+        default: 'yes'
+        description: "Deploy helm chart to cluster"
+
+
+- job-template:
+    name: '{name}-dummy'
+    project-type: pipeline
+    sandbox: false
+    pipeline-scm:
+      lightweight-checkout: true
+      script-path: '{jenkins-file}'
+      scm:
+        - git:
+            url: https://github.com/{repository}/{name}.git
+            branches:
+              - '*/{branch}'
+    publishers:
+    - email:
+        recipients: '{mail-to}'
+    properties:
+    - build-discarder:
+        days-to-keep: 3
+        num-to-keep: 5
+        artifact-days-to-keep: 4
+        artifact-num-to-keep: 6
+    parameters:
+    - string:
+        name: dummy-job
+        default: 'yes'
+        description: "Dummy Build"
+
